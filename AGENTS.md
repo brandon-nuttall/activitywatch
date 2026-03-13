@@ -1,5 +1,7 @@
 # ActivityWatch - Agent Guide
 
+> **IMPORTANT:** This is a fork. All work should be done on this fork only. Do NOT create pull requests on the upstream ActivityWatch repository.
+
 ## Overview
 
 ActivityWatch is a privacy-focused, open-source automated time tracker. It records what you do (active window, AFK status, browser activity) and stores it locally on your machine.
