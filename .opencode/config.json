@@ -1,0 +1,99 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "ActivityWatch",
+    "type": "monorepo",
+    "description": "Privacy-focused automated time tracker with Python and Rust components"
+  },
+  "context": {
+    "always-include": [
+      "AGENTS.md",
+      "README.md",
+      "CONTRIBUTING.md",
+      "Makefile"
+    ],
+    "component-docs": {
+      "data-models": ["aw-core/README.md", "aw-core/aw_core/"],
+      "server": ["aw-server/README.md", "aw-server-rust/README.md"],
+      "watchers": [
+        "aw-watcher-window/README.md",
+        "aw-watcher-afk/README.md",
+        "aw-watcher-input/README.md"
+      ],
+      "client": ["aw-client/README.md"]
+    }
+  },
+  "conventions": {
+    "python": {
+      "layout": "flat (except aw-watcher-input uses src)",
+      "build-system": "Poetry",
+      "testing-framework": "pytest",
+      "linting": "ruff (aw-qt uses flake8)",
+      "type-checking": "mypy",
+      "entry-points": "module_name/__main__.py or module_name/main.py"
+    },
+    "rust": {
+      "build-system": "Cargo",
+      "testing-framework": "cargo test",
+      "linting": "cargo fmt + cargo clippy",
+      "workspace": "aw-server-rust is a workspace with multiple crates"
+    }
+  },
+  "commands": {
+    "build": {
+      "all": "make build",
+      "aw-core": "make -C aw-core build",
+      "aw-client": "make -C aw-client build",
+      "aw-server": "make -C aw-server build",
+      "aw-server-rust": "make -C aw-server-rust build",
+      "aw-watcher-window": "make -C aw-watcher-window build",
+      "aw-watcher-afk": "make -C aw-watcher-afk build"
+    },
+    "test": {
+      "all": "make test",
+      "aw-core": "poetry run make -C aw-core test",
+      "aw-client": "poetry run make -C aw-client test",
+      "aw-server": "poetry run make -C aw-server test",
+      "aw-server-rust": "cargo test -C aw-server-rust",
+      "aw-watcher-window": "make -C aw-watcher-window test",
+      "aw-watcher-afk": "make -C aw-watcher-afk test"
+    },
+    "lint": {
+      "all": "make lint",
+      "specific": "ruff check ."
+    },
+    "typecheck": {
+      "all": "make typecheck",
+      "specific": "mypy <module>"
+    },
+    "run": {
+      "server": "aw-server --testing",
+      "server-rust": "aw-server-rust --testing",
+      "watcher-window": "aw-watcher-window --testing",
+      "watcher-afk": "aw-watcher-afk --testing",
+      "qt": "aw-qt --testing"
+    }
+  },
+  "patterns": {
+    "event-structure": {
+      "timestamp": "ISO 8601 datetime",
+      "duration": "float (seconds)",
+      "data": "dict with app, title, and other metadata"
+    },
+    "bucket-concept": "Container for events grouped by source (e.g., 'aw-watcher-window.hostname')",
+    "heartbeat-api": "Watchers send periodic heartbeats to update current state",
+    "query-pattern": "Filter → Merge → Transform → Bucket"
+  },
+  "important-paths": {
+    "build-script": "aw.spec",
+    "ci-config": ".github/workflows/build.yml",
+    "core-modules": ["aw-core/aw_core/", "aw-core/aw_datastore/", "aw-core/aw_query/", "aw-core/aw_transform/"],
+    "server-python": "aw-server/aw_server/",
+    "server-rust": "aw-server-rust/aw-server/",
+    "watchers": {
+      "window": "aw-watcher-window/aw_watcher_window/",
+      "afk": "aw-watcher-afk/aw_watcher_afk/",
+      "input": "aw-watcher-input/src/aw_watcher_input/"
+    }
+  }
+}
